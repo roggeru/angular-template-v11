@@ -3,24 +3,32 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoggerService } from '../shared/services/logger.service';
+import { ErrorService } from '../shared/services/error.service';
 
 @Injectable()
 export class CommonHttpInterceptor implements HttpInterceptor {
 
-    constructor(private loggerService: LoggerService) { }
+    constructor(
+        private loggerService: LoggerService,
+        private errorService: ErrorService
+    ) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        this.loggerService.log(`CommonHttpInterceptor >> intercept >> url ${req.urlWithParams}`);
-        return next.handle(req).pipe(tap((event: HttpEvent<any>) => {
-            this.loggerService.log(event);
+        const baseLog = `CommonHttpInterceptor >> intercept >> ${req.method} >> ${req.urlWithParams} >>`;
+        this.loggerService.log(`${baseLog} body >>`, req.body);
+        return next.handle(this._cloneHttpRequest(req)).pipe(tap((event: HttpEvent<any>) => {
             if (event instanceof HttpResponse) {
-                this.loggerService.log(`CommonHttpInterceptor >> intercept >> url ${req.urlWithParams} >> SUCCESS >> response >>`, event);
+                this.loggerService.log(`${baseLog} SUCCESS >> response >>`, event);
             }
         }, error => {
             if (error instanceof HttpErrorResponse) {
-                this.loggerService.log(`CommonHttpInterceptor >> intercept >> url ${req.urlWithParams} >> ERROR >> response >> `, error);
+                this.loggerService.log(`${baseLog} HTTP ERROR >> response >> `, error);
             }
         }));
+    }
+
+    private _cloneHttpRequest(req: HttpRequest<any>): HttpRequest<any> {
+        return req.clone({});
     }
 }
 

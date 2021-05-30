@@ -1,0 +1,16 @@
+<div *ngIf="errors" class="text-danger">
+    <ng-template ngFor [ngForOf]="errorsList" let-error>
+        <ng-container [ngSwitch]="error">
+            <div><strong>
+                <span></span>
+            </strong>
+                <strong *ngSwitchCase="'required'">Required field</strong>
+                <strong *ngSwitchCase="'min'">Min error</strong>
+                <strong *ngSwitchCase="'max'">Max error</strong>
+                <strong *ngSwitchCase="'minlength'">Min length</strong>
+                <strong *ngSwitchCase="'email'">Email</strong>
+                <strong *ngSwitchDefault>Invalid</strong>
+            </div>
+        </ng-container>
+    </ng-template>
+</div>

@@ -1,5 +1,7 @@
 import { AfterContentChecked, AfterContentInit, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { CommonHttpService } from './shared/services/common-http.service';
+import { FormControl, Validators } from '@angular/forms';
+import { ErrorDisplayerComponent } from './shared/components/error-displayer/error-displayer.component';
+import { BaseHttpService } from './shared/services/base-http.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +10,13 @@ import { CommonHttpService } from './shared/services/common-http.service';
 })
 export class AppComponent implements OnInit, AfterViewInit, AfterContentInit, AfterContentChecked {
 
+  @ViewChild(ErrorDisplayerComponent) errorDisplayer: ErrorDisplayerComponent;
+
+  control = new FormControl('', [Validators.email]);
+  text = '';
+
   constructor(
-    private http: CommonHttpService,
+    private http: BaseHttpService,
   ) { }
 
   ngOnInit(): void {
@@ -19,6 +26,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit, Af
 
   ngAfterViewInit(): void {
     console.log('AFTER VIEW INIT');
+    console.log(this.errorDisplayer);
   }
 
   ngAfterContentInit(): void {

@@ -10,7 +10,9 @@ import { CommonHttpInterceptor } from './common-http.interceptor';
     CommonModule,
     HttpClientModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: CommonHttpInterceptor, multi: true }]
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: CommonHttpInterceptor, multi: true },
+  ]
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
